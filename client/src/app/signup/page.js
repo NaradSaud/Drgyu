@@ -28,7 +28,7 @@ export default function Signup() {
     }
 
     try {
-      const res = await fetch("http://localhost:8080/api/v1/register", {
+      const res = await fetch("https://drgyu-qpv3.vercel.app/api/v1/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
