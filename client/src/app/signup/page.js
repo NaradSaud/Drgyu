@@ -3,10 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 
-export default function Login() {
+export default function Signup() {
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [error, setError] = useState(null);
 
@@ -18,15 +20,20 @@ export default function Login() {
     e.preventDefault();
     setError(null);
 
-    const { email, password } = formData;
+    const { name, email, password, confirmPassword } = formData;
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
     try {
-      const res = await fetch("http://localhost:8080/api/v1/login", {
+      const res = await fetch("http://localhost:8080/api/v1/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       const data = await res.json();
@@ -35,8 +42,8 @@ export default function Login() {
         throw new Error(data.message || "Something went wrong");
       }
 
-      console.log("Login Success:", data);
-      // Handle success: Store token, redirect, etc.
+      console.log("Signup Success:", data);
+      // Handle success: Redirect to login or store token
     } catch (err) {
       setError(err.message);
     }
@@ -46,12 +53,26 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-blue-200">
       <div className="bg-white shadow-lg rounded-xl p-8 max-w-md w-full">
         <h2 className="text-3xl font-bold text-center text-blue-800 mb-6">
-          Login
+          Sign Up
         </h2>
 
         {error && <p className="text-red-600 mb-4 text-center">{error}</p>}
 
         <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label htmlFor="name" className="block text-gray-700 font-medium">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              placeholder="Enter your name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full mt-2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 font-medium">
               Email
@@ -83,22 +104,39 @@ export default function Login() {
             />
           </div>
 
+          <div className="mb-6">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-gray-700 font-medium"
+            >
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder="Confirm your password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full mt-2 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-700 transition-transform duration-300 transform hover:scale-105"
           >
-            Login
+            Sign Up
           </button>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-gray-700">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link
-              href="/signup"
+              href="/login"
               className="text-blue-600 hover:underline font-semibold"
             >
-              Sign Up
+              Login
             </Link>
           </p>
         </div>
