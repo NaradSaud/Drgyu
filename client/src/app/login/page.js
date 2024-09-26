@@ -21,7 +21,7 @@ export default function Login() {
     const { email, password } = formData;
 
     try {
-      const res = await fetch("http://localhost:8080/api/v1/login", {
+      const res = await fetch("https://drgyu-qpv3.vercel.app/api/v1/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
