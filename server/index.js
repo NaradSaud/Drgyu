@@ -1,14 +1,15 @@
 const express = require('express');
-const routes = require('./routes');
-const bodyParser = require('body-parser');
 const app = express();
-require('dotenv').config();
-require('./config/db');
-const PORT = process.env.PORT || 8080;
 
-app.use(bodyParser.json());
-app.use('/api/v1', routes);
+// Middleware to parse JSON requests
+app.use(express.json()); // Add this line
 
-app.listen(PORT, ()=>{
-    console.log(`Server is up and running on PORT: ${PORT}`);
-})
+// Routes
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/v1', userRoutes);
+
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
