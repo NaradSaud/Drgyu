@@ -36,16 +36,18 @@ export default function Signup() {
         body: JSON.stringify({ name, email, password }),
       });
 
-      const data = await res.json();
-
+      // Check for valid response
       if (!res.ok) {
-        throw new Error(data.message || "Something went wrong");
+        const errorData = await res.json(); // Try to parse error message
+        throw new Error(errorData.message || "Something went wrong");
       }
 
+      const data = await res.json(); // Parse JSON response if successful
       console.log("Signup Success:", data);
+      
       // Handle success: Redirect to login or store token
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Unexpected error occurred");
     }
   };
 
